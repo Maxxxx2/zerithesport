@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZERITH | E-sport Structure</title>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --primary: #0084ff; /* Cyan E-sport principal */
+            --secondary: #00039b; /* Violet accent */
+            --bg: #0c0c0e; /* Fond très sombre */
+            --card-bg: #16161a; /* Fond des cartes */
+            --text: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations globales --- */
+        @keyframes glow { from { text-shadow: 0 0 10px var(--primary); } to { text-shadow: 0 0 20px var(--secondary); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Navigation --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 5%; /* Légère réduction du padding pour le logo */
+            background: rgba(0,0,0,0.8);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            border-bottom: 2px solid var(--secondary); /* Accent violet sur la bordure */
+        }
+        
+        /* Conteneur du logo remplacé */
+        .logo-container {
+            height: 60px; /* Ajuste la hauteur selon tes besoins */
+            cursor: pointer;
+        }
+        .logo-container img {
+            height: 100%;
+            width: auto;
+            display: block;
+        }
+
+        nav ul { display: flex; list-style: none; align-items: center; }
+        nav ul li { 
+            margin-left: 30px; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+        nav ul li:hover { color: var(--primary); text-shadow: 0 0 10px var(--primary); }
+
+        /* --- Sections communes --- */
+        section { padding: 120px 10% 50px; min-height: 100vh; display: none; }
+        section.active { display: block; animation: fadeIn 0.6s ease-out; }
+
+        h2 { 
+            font-family: 'Orbitron'; 
+            font-size: 3rem; 
+            margin-bottom: 50px; 
+            text-align: center; 
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, var(--primary), #fff, var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Roster Cards (Animations Pro) --- */
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .category-title { 
+            grid-column: 1 / -1; 
+            margin-top: 50px; 
+            color: #fff; 
+            font-family: 'Orbitron'; 
+            font-size: 1.8rem; 
+            border-left: 4px solid var(--primary);
+            padding-left: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .player-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 3px; /* Espace pour la bordure animée */
+            text-align: center;
+            transition: 0.4s ease-in-out;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+        
+        /* Effet de bordure tournante au survol */
+        .player-card::before {
+            content: ''; 
+            position: absolute; 
+            top: -50%; 
+            left: -50%; 
+            width: 200%; 
+            height: 200%;
+            background: conic-gradient(transparent, var(--primary), transparent 30%);
+            animation: rotate 4s linear infinite; 
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .player-card:hover { transform: translateY(-10px); border-color: transparent; }
+        .player-card:hover::before { opacity: 1; }
+        
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Contenu interne de la carte pour masquer la rotation centrale */
+        .card-inner { 
+            background: var(--card-bg); 
+            position: relative; 
+            z-index: 1; 
+            padding: 25px; 
+            border-radius: 9px; 
+            height: 100%;
+        }
+        .player-card h3 { 
+            font-family: 'Orbitron'; 
+            font-size: 1.6rem; 
+            margin-bottom: 8px; 
+            color: #fff;
+        }
+        .pr { 
+            color: var(--primary); 
+            font-weight: 700; 
+            font-size: 1rem; 
+            margin-bottom: 20px; 
+            letter-spacing: 1px;
+        }
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .social-icons a { 
+            color: #888; 
+            font-size: 1.3rem; 
+            transition: 0.3s; 
+        }
+        .social-icons a:hover { color: #fff; transform: scale(1.2); }
+
+        /* --- Twitch Integration --- */
+        .twitch-box { 
+            background: rgba(100, 65, 165, 0.1); 
+            border: 1px solid #6441a5;
+            padding: 30px; 
+            border-radius: 12px; 
+            text-align: center; 
+            margin: 50px auto;
+            max-width: 800px;
+        }
+        .twitch-box h3 { font-family: 'Orbitron'; color: #6441a5; margin-bottom: 20px; text-transform: uppercase;}
+
+        /* --- Social Page --- */
+        .social-big-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+        .social-big-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            transition: 0.3s;
+            border: 1px solid #222;
+        }
+        .social-big-card:hover { border-color: var(--secondary); transform: scale(1.05); }
+        .social-big-card i { font-size: 4rem; margin-bottom: 20px; }
+        .social-big-card h3 { font-family: 'Orbitron'; }
+
+        /* --- Formulaire de Contact Pro --- */
+        .contact-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid #222;
+        }
+        .contact-form { display: flex; flex-direction: column; }
+        .contact-form input, .contact-form textarea {
+            padding: 18px; 
+            margin-bottom: 20px; 
+            background: rgba(0,0,0,0.3); 
+            border: 1px solid #333; 
+            color: #fff; 
+            border-radius: 8px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+        }
+        .contact-form input:focus, .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .contact-form button {
+            padding: 18px; 
+            background: linear-gradient(90deg, var(--secondary), var(--primary)); 
+            border: none; 
+            font-weight: 700; 
+            font-family: 'Orbitron';
+            cursor: pointer; 
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+            transition: 0.3s;
+        }
+        .contact-form button:hover { 
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-container" onclick="showSection('home')">
+            <img src="logo.png" alt="ZERITH Logo">
+        </div>
+        <ul>
+            <li onclick="showSection('home')">Accueil</li>
+            <li onclick="showSection('roster')">Roster</li>
+            <li onclick="showSection('socials')">Réseaux</li>
+            <li onclick="showSection('boutique')">Boutique</li>
+            <li onclick="showSection('sponsors')">Sponsors</li>
+            <li onclick="showSection('contact')">Contact</li>
+        </ul>
+    </nav>
+
+    <section id="home" class="active">
+        <div style="text-align: center; margin-top: 10vh;">
+            <h1 style="font-family: 'Orbitron'; font-size: 5rem; animation: glow 2s infinite alternate; text-transform: uppercase; letter-spacing: 10px;">Zerith E-Sport</h1>
+            <p style="font-size: 1.5rem; letter-spacing: 5px; color: #aaa;">#ZRTWIN</p>
+            
+            <div class="twitch-box">
+                <h3><i class="fab fa-twitch"></i> LIVE ACTUEL</h3>
+                <div id="twitch-embed">
+                    <iframe 
+src="https://player.twitch.tv/?channel=kitsu_prime&parent=localhost&parent=127.0.0.1" 
+frameborder="0" 
+allowfullscreen="true" 
+scrolling="no" 
+height="400" 
+width="100%">
+</iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="roster">
+        <center><h2>NOTRE ROSTER</h2></center>
+        
+        <div class="roster-grid">
+            <h3 class="category-title">🔥 MAIN ROSTER (+20K PR)</h3>
+            
+            <div class="player-card"><div class="card-inner"><h3>Shurkxn</h3><p class="pr">Main roster</p><div class="social-icons"><a href="https://twitter.com/shurkxn" target="_blank"><i class="fab fa-x-twitter"></i></a><a></i></a></div></div></div>
+            
+            <div class="player-card"><div class="card-inner"><h3>Rizmo</h3><p class="pr">Main roster</p><div class="social-icons"></i></a></div></div></div>
+            
+            <div class="player-card"><div class="card-inner"><h3>Kamo</h3><p class="pr">Main roster</p><div class="social-icons"><a href="https://x.com/kamo_mrt"><i class="fab fa-x-twitter"></i></a></i></a></div></div></div>
+
+            <h3 class="category-title">🏅 JOUEUR ESPORT (+4K PR)</h3>
+            
+            <div class="player-card"><div class="card-inner"><h3>Kiowsky</h3><p class="pr">Esport</p><div class="social-icons"></i></a></div></div></div>
+            
+            <div class="player-card"><div class="card-inner"><h3>Tikzos</h3><p class="pr">Esport</p><div class="social-icons"></i></a></div></div></div>
+
+            <h3 class="category-title">🏆 JOUEUR ACADÉMIQUE (+2K PR)</h3>
+            
+            <div class="player-card"><div class="card-inner"><h3>cxmiL</h3><p class="pr">Académie</p><div class="social-icons"></i></a></div></div></div>
+            
+            <div class="player-card"><div class="card-inner"><h3>Sxñêin</h3><p class="pr">Académie</p><div class="social-icons"></i></a></div></div></div>
+            
+            <div class="player-card"><div class="card-inner"><h3>Bayzzen</h3><p class="pr">Académie</p><div class="social-icons"></i></a></div></div></div>
+            
+            <div class="player-card"><div class="card-inner"><h3>Tarkov</h3><p class="pr">Académie</p><div class="social-icons"></i></a></div></div></div>
+            
+            <h3 class="category-title">🌟 JOUEUR ÉSPOIR (+1K PR)</h3>
+            <div class="player-card"><div class="card-inner"><h3>Tayko</h3><p class="pr">Espoir</p></div></div>
+            <div class="player-card"><div class="card-inner"><h3>Eyzen</h3><p class="pr">Espoir</p><div class="social-icons"><a href="https://x.com/eyzenn_" target="_blank"><i class="fab fa-x-twitter"></i></a><a></i></a></div></div></div>
+            <div class="player-card"><div class="card-inner"><h3>M3gq</h3><p class="pr">Espoir</p><div class="social-icons"><a href="https://x.com/MEGAfnt" target="_blank"><i class="fab fa-x-twitter"></i></a><a></i></a></div></div></div>
+            <div class="player-card"><div class="card-inner"><h3>StEGØǃ</h3><p class="pr">Espoir</p></div></div>
+            <div class="player-card"><div class="card-inner"><h3>Slays</h3><p class="pr">Espoir</p><div class="social-icons"><a href="https://x.com/zrt_slays" target="_blank"><i class="fab fa-x-twitter"></i></a><a></i></a></div></div></div>
+            <div class="player-card"><div class="card-inner"><h3>Agent woo</h3><p class="pr">Espoir</p></div></div>
+            <div class="player-card"><div class="card-inner"><h3>Noam!</h3><p class="pr">Espoir</p><div class="social-icons"><a href="https://x.com/Noam_uw" target="_blank"><i class="fab fa-x-twitter"></i></a><a></i></a></div></div></div>
+            <div class="player-card"><div class="card-inner"><h3>Seikonn</h3><p class="pr">Espoir</p></div></div>
+            <div class="player-card"><div class="card-inner"><h3>Deezy</h3><p class="pr">Espoir</p><div class="social-icons"><a href="https://x.com/Deezybest60" target="_blank"><i class="fab fa-x-twitter"></i></a><a></i></a></div></div></div>
+        </div>
+    </section>
+
+    <section id="socials">
+        <center><h2>REJOIGNEZ LA NATION</h2></center>
+        <div class="social-big-grid">
+            <a href="https://x.com/zerith_esport" target="_blank" class="social-big-card">
+               <i class="fab fa-x-twitter" style="color: #fff;"></i>
+                <h3>Twitter (X)</h3>
+                <p>Actus & Résultats</p>
+            </a>
+            <a href="https://discord.gg/vQgD568a" target="_blank" class="social-big-card">
+                <i class="fab fa-discord" style="color: #5865F2;"></i>
+                <h3>Discord</h3>
+                <p>Communauté</p>
+            </a>
+            <a href="https://www.tiktok.com/@zerith_esport" target="_blank" class="social-big-card">
+                <i class="fab fa-tiktok" style="color: #ff0050;"></i>
+                <h3>TikTok</h3>
+                <p>Meilleurs Clips</p>
+            </a>
+            <a href="https://www.twitch.tv/kitsu_prime" target="_blank" class="social-big-card">
+                <i class="fab fa-twitch" style="color: #9146FF;"></i>
+                <h3>Twitch</h3>
+                <p>Lives Événements</p>
+            </a>
+        </div>
+    </section>
+
+<section id="boutique">
+    <center><h2>BOUTIQUE </h2></center>
+    <div class="roster-grid">
+     
+        <!-- Article 3 : Maillot -->
+        <div class="player-card">
+            <div class="card-inner">
+                <img src="pasted-image-sat-feb-28-2026-16-40-51-gmt-0100-heure-normale-d-europe-centrale-high-removebg-preview.png" alt="Maillot ZERITH" style="width:100%; border-radius:8px; margin-bottom:15px;">
+                <h3>Maillot ZERITH</h3>
+                <p class="pr" style="color:#aaa;">Maillot officiel de l’équipe e-sport.</p>
+                <p class="pr" style="color:#0084ff;">34,99 €</p>
+                <a href="https://www.chezyokoesport.fr/product/22274877/maillot-zerith-esport" style="display:inline-block; padding:10px 20px; background:#0084ff; color:#fff; text-decoration:none; border-radius:8px;">Acheter</a>
+            </div>
+       
+        </div>
+
+        <!-- Article 1 : Manchette -->
+        <div class="player-card">
+            <div class="card-inner">
+                <img src="pasted-image-sun-mar-08-2026-17-31-03-gmt-0100-heure-normale-d-europe-centrale-high-removebg-preview.png" alt="Manchette ZERITH" style="width:100%; border-radius:8px; margin-bottom:15px;">
+                <h3>Manchette ZERITH</h3>
+                <p class="pr" style="color:#aaa;">Protégez vos poignets avec style.</p>
+                <p class="pr" style="color:#0084ff;">14,99 €</p>
+                <a href="https://www.chezyokoesport.fr/product/22369166/manchette-zerith-esport" style="display:inline-block; padding:10px 20px; background:#0084ff; color:#fff; text-decoration:none; border-radius:8px;">Acheter</a>
+            </div>
+        </div>
+
+        <!-- Article 2 : Tapis de souris -->
+        <div class="player-card">
+            <div class="card-inner">
+                <img src="pasted-image-sun-mar-08-2026-17-32-47-gmt-0100-heure-normale-d-europe-centrale-high-removebg-preview.png" alt="Tapis de souris ZERITH" style="width:100%; border-radius:8px; margin-bottom:15px;">
+                <h3>Tapis de souris ZERITH</h3>
+                <p class="pr" style="color:#aaa;">Surface lisse pour vos sessions gaming.</p>
+                <p class="pr" style="color:#0084ff;">19,00€</p>
+                <a href="https://www.chezyokoesport.fr/product/20771482/tapis-de-souris-zerith-esport" style="display:inline-block; padding:10px 20px; background:#0084ff; color:#fff; text-decoration:none; border-radius:8px;">Acheter</a>
+            </div>
+        </div>
+
+
+
+    </div>
+</section>
+
+    <section id="sponsors">
+        <center><h2>PARTENAIRES</h2></center>
+ 
+        <p style="text-align: center; margin-top: 60px; color: #888; font-size: 1.2rem;">Vous voulez soutenir l'ascension de Zerith ? <a href="#" onclick="showSection('contact')" style="color: var(--primary); text-decoration: none;"> notre staff.</a></p>
+    </section>
+
+    <section id="contact">
+        <center><h2>CONTACTEZ ZERITH</h2></center>
+
+<div class="contact-container" style="text-align: center;">
+
+    <p style="margin-bottom: 30px; color: #aaa;">
+        Recrutement, Partenariat ou question générale.
+    </p>
+
+    <p style="margin-bottom: 30px; color: #888;">
+        Passe directement par notre Discord pour une réponse rapide ⚡
+    </p>
+
+    <a href="https://discord.gg/vQgD568a" target="_blank"
+       style="display:inline-block;
+              padding:18px 30px;
+              background:#5865F2;
+              color:white;
+              border-radius:10px;
+              text-decoration:none;
+              font-family:Orbitron;
+              font-weight:700;
+              letter-spacing:2px;
+              transition:0.3s;">
+        <i class="fab fa-discord"></i> REJOINDRE LE DISCORD
+    </a>
+
+</div>
+    </section>
+
+    
+
+    <script>
+        // Système de navigation SPA simple
+        function showSection(id) {
+            // Désactiver toutes les sections
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            // Activer la section demandée
+            const target = document.getElementById(id);
+            if(target) {
+                target.classList.add('active');
+                // Remonter en haut de page automatiquement
+                window.scrollTo(0,0);
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
+
+
+

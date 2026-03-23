@@ -1,0 +1,35 @@
+#boutique {
+    padding: 100px 20px 50px;
+}
+
+#boutique h2 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* ALIGNEMENT UNIQUEMENT DANS BOUTIQUE */
+#boutique .roster-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* CARTES UNIQUEMENT DANS BOUTIQUE */
+#boutique .player-card {
+    background: #111;
+    border-radius: 12px;
+    width: 400px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* IMAGES UNIQUEMENT DANS BOUTIQUE */
+#boutique .player-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: contain;
+}
